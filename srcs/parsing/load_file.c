@@ -6,7 +6,7 @@
 /*   By: ojauregu <ojauregu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 15:05:36 by orfreoua          #+#    #+#             */
-/*   Updated: 2023/02/21 04:57:38 by ojauregu         ###   ########.fr       */
+/*   Updated: 2023/02/21 10:42:54 by ojauregu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,17 @@ int	check_file(char *file)
 	if (file[len_name - 4] != '.' || file[len_name - 3] != 'c'
 		|| file[len_name - 2] != 'u' || file[len_name - 1] != 'b')
 		return (print_error(BAD_NAME_FILE));
+	//printf("va ouvrir\n");
+	fd = open(file, O_DIRECTORY);
+	//printf("ouvert %d\n",fd);
+	if (fd != -1)
+	{
+		close(fd);
+		return (print_error(PATH_IS_DIR));
+	}
+	//close(fd);
 	fd = open(file, O_RDONLY);
+//	printf("ouvert %d\n",fd);
 	if (fd == -1)
 		return (print_error(BAD_PATH_FILE));
 	close(fd);
