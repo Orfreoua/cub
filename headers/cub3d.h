@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orfreoua <ofreoua42student@gmail.com>      +#+  +:+       +#+        */
+/*   By: ojauregu <ojauregu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 14:58:03 by orfreoua          #+#    #+#             */
-/*   Updated: 2023/02/16 20:14:28 by orfreoua         ###   ########.fr       */
+/*   Updated: 2023/02/21 05:28:31 by ojauregu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 
 # include "headers.h"
 
-# define ERROR 1
+# define ERROR -1
+# define MAP_ERROR -1
 # define OK 0
 
 # define RESO_X 1000
@@ -31,13 +32,17 @@ typedef struct s_textures
 
 typedef struct s_file
 {
-	char		**map;
-	t_size		grid;
-	t_point		pos_player;
-	double		rotate;
-	t_textures	textures;
-	t_color		ceiling;
-	t_color		floor;
+	char		**map;//int **
+	t_size		grid;//taille de map
+	t_point		pos_player;// dans draw.h
+	double		rotate;//cercle trigo
+	t_textures	textures;//ref des path en char * look up
+	t_color		ceiling;//RGB dans colors.h
+	int			ret_cei;
+	t_color		floor;// idem
+	int			ret_flo;
+	int			gnl;
+	char		*map_error;//message d'erreur si existante
 }	t_file;
 
 typedef struct	s_screen
@@ -86,5 +91,46 @@ void	mini_map_init(t_data *data, t_minimap *minimap);
 int	logic_raycasting(t_data *data);
 
 void	draw_line(t_data *data, t_point a1, t_point a2, int color);
+
+
+/* oce */
+
+int   parsing_map(t_data *data, char *file);
+int it_s_ok_to_be_line(t_data *data, char *line);
+int get_colors_bis(char *line, int x, t_color *color);//pour la norme
+int get_colors(char *line, int x, t_color *color);
+int	ft_is_digit(int c);//diff de la libft
+int	ft_atoii(const char *str, int x);//diff de la libft
+//char    *get_the_line(char *line, int x);
+int is_it_direction(char *line, int x);
+int    pars_error(int ret, t_data *data);
+//int	ft_atoii(const char *str, int x);
+//int get_colors(char *line, int x, t_color *color);
+int map_error(t_data *data);
+int shake_colors(t_color *color, t_data *data);
+char	*ft_itoa(int n);
+void	ft_bzero(void *s, size_t n);
+char	*malicious(char *str);
+char	*joi(char *s1, char *s2);
+char	*join_fr(char *s1, char *s2);
+int	ft_strlenn(char *str);
+char	*print_error_null(char *msg);
+int	print_error_to_free(char *msg);
+char	*cftp(char *str, int s, int e);
+char    *cut_spaces(char *str);
+
+
+/* GNL */
+int	ft_check(char *str);
+char	*ft_read_suite(int fd, int n, char *strr, int *rid);
+int	ft_read(char **str, int fd);
+int	get_next_lineo(int fd, char **line);
+char	*ft_nextline(char **str);
+int	free_for_rtn(void *ptr, int rtn);
+char	*lolilol(char **str, char *strr, int x, int y);
+
+
+
+void    print_file(t_data *data);///fonction debug
 
 #endif

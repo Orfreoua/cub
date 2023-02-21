@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   load_file_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orfreoua <ofreoua42student@gmail.com>      +#+  +:+       +#+        */
+/*   By: ojauregu <ojauregu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 18:13:16 by orfreoua          #+#    #+#             */
-/*   Updated: 2023/02/08 19:50:44 by orfreoua         ###   ########.fr       */
+/*   Updated: 2023/02/21 05:42:31 by ojauregu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,12 @@ void	init_file(t_file *file)
 	file->floor.r = -1;
 	file->floor.g = -1;
 	file->floor.b = -1;
-	file->textures.north = 0;
-	file->textures.south = 0;
-	file->textures.east = 0;
-	file->textures.west = 0;
-	file->map = NULL;
+	file->textures.north = NULL;
+	file->textures.south = NULL;
+	file->textures.west = NULL;
+	file->textures.east = NULL;
+	file->map = NULL;//
+	file->gnl = -1;
 	file->pos_player.x = -1;
 	file->pos_player.y = -1;
 }

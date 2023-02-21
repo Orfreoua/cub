@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   load_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orfreoua <ofreoua42student@gmail.com>      +#+  +:+       +#+        */
+/*   By: ojauregu <ojauregu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 15:05:36 by orfreoua          #+#    #+#             */
-/*   Updated: 2023/02/08 20:04:08 by orfreoua         ###   ########.fr       */
+/*   Updated: 2023/02/21 04:57:38 by ojauregu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,11 @@ int	load_file(t_data *data, char *file)
 {
 	if (check_file(file) == ERROR)
 		return (ERROR);
+	//parsing_map(data, file);
 	init_file(&data->file);
-	if (check_inside_file(data, open(file, O_RDONLY)) == ERROR)
+	if (parsing_map(data, file) == ERROR)
 		return (ERROR);
+	//if (check_inside_file(data, open(file, O_RDONLY)) == ERROR)
+	//	return (ERROR);
 	return (OK);
 }

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orfreoua <ofreoua42student@gmail.com>      +#+  +:+       +#+        */
+/*   By: ojauregu <ojauregu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 14:57:30 by orfreoua          #+#    #+#             */
-/*   Updated: 2023/02/16 21:40:21 by orfreoua         ###   ########.fr       */
+/*   Updated: 2023/02/21 04:55:07 by ojauregu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "../headers/cub3d.h"
 
@@ -69,6 +70,7 @@ int	main(int argc, char **argv)
 		return (print_error(BAD_NB_ARG));
 	if (load_file(&data, argv[1]) == ERROR)
 		return (ERROR);
+	//exit(0);//////////////
 	data.mlx.ptr = mlx_init();
 	if (!data.mlx.ptr)
 		return (print_error(MLX_CONNECTION));

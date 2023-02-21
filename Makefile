@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: orfreoua <ofreoua42student@gmail.com>      +#+  +:+       +#+         #
+#    By: ojauregu <ojauregu@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/02 14:57:57 by orfreoua          #+#    #+#              #
-#    Updated: 2023/02/16 18:27:47 by orfreoua         ###   ########.fr        #
+#    Updated: 2023/02/21 04:02:22 by ojauregu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ OBJS			= $(SRCS:.c=.o)
 
 CC				= cc
 
-CFLAGS			= -Wall -Wextra -Werror -I includes.
+CFLAGS			= -Wall -Wextra -Werror -I ./headers
 
 LIBS			= -L ./mlx_linux/ -lmlx -lXext -lX11 -lm
 
