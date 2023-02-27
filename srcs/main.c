@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojauregu <ojauregu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: orfreoua <ofreoua42student@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 14:57:30 by orfreoua          #+#    #+#             */
-/*   Updated: 2023/02/21 10:34:52 by ojauregu         ###   ########.fr       */
+/*   Updated: 2023/02/27 19:46:19 by orfreoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,49 +15,50 @@
 
 int	end(t_data *data)
 {
+	free_all(data);
+	free(data->rc.rays);
+	free(data->rc.distances);
 	mlx_destroy_window(data->mlx.ptr, data->mlx.ptr_win);
 	exit(0);
-	//free_map
-	return (0);
 }
 
-void	init_pour_test(t_data *data)
+int	load_game(t_data *data)
 {
-	char **map;
-
-	map = malloc(sizeof(char *) * 5);
-	map[0] = ft_strdup("1111");
-	map[1] = ft_strdup("1001");
-	map[2] = ft_strdup("10N1");
-	map[3] = ft_strdup("1111");
-	map[4] = 0;
-	data->file.pos_player.x = 2;
-	data->file.pos_player.y = 2;
-	data->file.map = map;
-	data->file.grid.height = 4.0;
-	data->file.grid.width = 4.0;
-	data->file.pos_player.x = 2;
-	data->file.pos_player.y = 2;
-	printf("cellx %f\n", data->minimap.cell.width);
-	printf("celly %f\n", data->minimap.cell.height);
-	data->minimap.pos_player.y = (data->file.pos_player.y * data->minimap.cell.height)
-		+ (data->minimap.cell.height / 2) + MMOFFSET_Y;
-	data->minimap.pos_player.x = (data->file.pos_player.x * data->minimap.cell.width)
-		+ (data->minimap.cell.width / 2) + MMOFFSET_X;
-	printf("la%f :\n", data->minimap.pos_player.y);
-	printf("la%f :\n", data->minimap.pos_player.x);
+	data->mlx.ptr = mlx_init();
+	if (!data->mlx.ptr)
+		return (print_error(MLX_CONNECTION));
+	data->mlx.ptr_win = mlx_new_window(data->mlx.ptr, RESO_X, RESO_Y, "");
+	if (!data->mlx.ptr_win)
+		return (print_error(WIN_CONNECTION));
+	data->mlx.screen.bpp = 0;
+	data->mlx.screen.line_length = 0;
+	data->mlx.screen.endian = 0;
+	data->mlx.screen.ptr = mlx_new_image(data->mlx.ptr, RESO_X, RESO_Y);
+	data->mlx.screen.addr = mlx_get_data_addr(data->mlx.screen.ptr,
+			&data->mlx.screen.bpp, &data->mlx.screen.line_length,
+			&data->mlx.screen.endian);
+	
+	mlx_hook(data->mlx.ptr_win, 33, 1L << 5, end, data);
+	if (mlx_hook(data->mlx.ptr_win, 2, 1L << 0, key_hook, data) == ESCAPE)
+		return (OK);
+	mlx_loop(data->mlx.ptr);
+	return (OK);
 }
 
-int	key_hook(int key, t_data *data)
+int	init_rc(t_data *data)
 {
-	(void)data;
-	if (key == ESCAPE)
-		end(data);
-	if (key == UP)
+	data->rc.rays = malloc(sizeof(t_point) * (int)RESO_X);
+	if (!data->rc.rays)
 	{
-		if (logic_raycasting(data) == ERROR)
-			exit (1);
-		display_minimap(data);
+		free_all(data);
+		return (ERROR);
+	}
+	data->rc.distances = malloc(sizeof(double) * (int)RESO_X);
+	if (!data->rc.distances)
+	{
+		free(data->rc.rays);
+		free_all(data);
+		return (ERROR);
 	}
 	return (OK);
 }
@@ -70,24 +71,14 @@ int	main(int argc, char **argv)
 		return (print_error(BAD_NB_ARG));
 	if (load_file(&data, argv[1]) == ERROR)
 		return (ERROR);
-	//exit(0);//////////////
-	data.mlx.ptr = mlx_init();
-	if (!data.mlx.ptr)
-		return (print_error(MLX_CONNECTION));
-	data.mlx.ptr_win = mlx_new_window(data.mlx.ptr, RESO_X, RESO_Y, "");
-	if (!data.mlx.ptr_win)
-		return (print_error(WIN_CONNECTION));
-	data.mlx.screen.bpp = 0;
-	data.mlx.screen.line_length = 0;
-	data.mlx.screen.endian = 0;
-	data.mlx.screen.ptr = mlx_new_image(data.mlx.ptr,
-					RESO_X, RESO_Y);
-	data.mlx.screen.addr =  mlx_get_data_addr(data.mlx.screen.ptr, &data.mlx.screen.bpp,
-					&data.mlx.screen.line_length, &data.mlx.screen.endian);
-	init_pour_test(&data);
 	mini_map_init(&data, &data.minimap);
-	mlx_hook(data.mlx.ptr_win, 2, 1L << 0, key_hook, &data);
-	mlx_hook(data.mlx.ptr_win, 33, 1L << 5, end, &data);
-	mlx_loop(data.mlx.ptr);
+	print_tab(data.file.map, (data.file.grid.height - 1));
+	if (init_rc(&data) == ERROR)
+	{
+		// faut print erreur de malloc.
+		return (EXIT_FAILURE);
+	}
+	load_game(&data);
+	end(&data);
 	return (0);
 }

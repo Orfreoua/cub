@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojauregu <ojauregu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: orfreoua <ofreoua42student@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 14:58:03 by orfreoua          #+#    #+#             */
-/*   Updated: 2023/02/21 05:28:31 by ojauregu         ###   ########.fr       */
+/*   Updated: 2023/02/27 18:49:41 by orfreoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ typedef struct s_textures
 
 typedef struct s_file
 {
-	char		**map;//int **
 	t_size		grid;//taille de map
 	t_point		pos_player;// dans draw.h
 	double		rotate;//cercle trigo
@@ -42,6 +41,16 @@ typedef struct s_file
 	t_color		floor;// idem
 	int			ret_flo;
 	int			gnl;
+	int			item;
+	int			parsing_map;
+	char		*parsing_map_msg;
+	char		*src;
+	int			pos;
+	int			x;
+	int			n;
+	int			y;
+	int			**map;
+	int			fin;
 	char		*map_error;//message d'erreur si existante
 }	t_file;
 
@@ -98,10 +107,10 @@ void	draw_line(t_data *data, t_point a1, t_point a2, int color);
 int   parsing_map(t_data *data, char *file);
 int it_s_ok_to_be_line(t_data *data, char *line);
 int get_colors_bis(char *line, int x, t_color *color);//pour la norme
-int get_colors(char *line, int x, t_color *color);
+int get_colors(char *line, int x, t_color *color, t_data *data);
 int	ft_is_digit(int c);//diff de la libft
 int	ft_atoii(const char *str, int x);//diff de la libft
-//char    *get_the_line(char *line, int x);
+char    *get_the_line(char *line, int x, t_data *data);
 int is_it_direction(char *line, int x);
 int    pars_error(int ret, t_data *data);
 //int	ft_atoii(const char *str, int x);
@@ -118,6 +127,27 @@ char	*print_error_null(char *msg);
 int	print_error_to_free(char *msg);
 char	*cftp(char *str, int s, int e);
 char    *cut_spaces(char *str);
+char	*mali(char c);
+int parsing_mapy(char *str, char *src, t_file *file);
+int create_map(char *str, t_data *data);
+int	str_c(char *str, char c);
+
+void	create_tab(t_file *file, char *str);
+int **cpy_tab(t_file *file, int **tmp);
+
+int **add_to_tab(int **tab, char *str, int stop, int size);
+int convert(char c);
+int	ft_is_cap_alpha(int c);
+//int	ft_is_digit(int c);
+double  player_pos(char c, t_file *file);
+void    free_tab(int **tab, int size);
+void    free_tab_bis(int **tab, int y);
+void    free_all(t_data *data);
+void    free_strings(t_file *file);
+void    free_alll(t_file *file);
+int		space(char *str);
+
+
 
 
 /* GNL */
@@ -132,5 +162,20 @@ char	*lolilol(char **str, char *strr, int x, int y);
 
 
 void    print_file(t_data *data);///fonction debug
+void    print_tab(int **tab, int stop);////print le tab d int**
+
+
+
+
+void    print_file(t_data *data);///fonction debug
+void    print_tab(int **tab, int stop);////print le tab d int**
+
+
+void	draw_full_circle(t_data *data, int x, int y, int radius);
+void	draw_background(t_data *data);
+void	raycasting(t_data *data);
+int		key_hook(int key, t_data *data);
+int		end(t_data *data);
+int		get_file_position(t_data *data, double x, double y);
 
 #endif

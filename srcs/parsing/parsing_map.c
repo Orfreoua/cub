@@ -68,6 +68,18 @@ char	*joi(char *s1, char *s2)
 	return (tmp);
 }
 
+char	*mali(char c)
+{
+	char	*tmp;
+
+	tmp = (char *)malloc(sizeof(char) * (2));
+	if (!tmp)
+		return (print_error_null(MALLOC_FAILED));
+	tmp[0] = c;
+	tmp[1] = '\0';
+	return (tmp);
+}
+
 char	*malicious(char *str)
 {
 	char	*tmp;
@@ -88,15 +100,30 @@ char	*malicious(char *str)
 
 int    pars_error(int ret, t_data *data)
 {
-    if (ret == -1)
-      print_error(READ);
+    if (ret == -1 && data->file.parsing_map_msg == NULL)
+    {
+      //  printf("passe ici?? %d, err-%s-\n", ret, data->file.parsing_map_msg);
+        print_error(READ);
+        return (MAP_ERROR);
+    }
+    else if (ret == -1 && data->file.parsing_map_msg != NULL)
+    {
+        print_error(data->file.parsing_map_msg);
+        return (MAP_ERROR);
+    }
     else if (ret == 0)
     {
-        // data->file.gnl = 1;
+        free_all(data);
+       // printf("fini %d y  = %d\n", data->file.map[0][0], data->file.y);
         return (print_error_to_free(joi(malicious(FILE_ERR), ft_itoa(data->file.gnl))));
     }
-  /*  else if (ret == -2)
-      print_error();*/
+    else if (ret == -2)
+    {
+        free_all(data);
+       // printf("fini %d y===%d\n", data->file.map[0][0], data->file.y);
+        return (print_error_to_free(data->file.parsing_map_msg));
+    }
+    free_all(data);
     return (MAP_ERROR);
 }
 
@@ -114,6 +141,7 @@ char	*cftp(char *str, int s, int e)
 	while (s < e)
 		tmp[x++] = str[s++];
 	tmp[x] = '\0';
+    free(str);
 	return (tmp);
 }
 
@@ -155,7 +183,7 @@ char    *cut_spaces(char *str)
     return (str);
 }
 
-char    *get_the_line(char *line, int x)
+char    *get_the_line(char *line, int x, t_data *data)
 {
     int     y;
     char    *str;
@@ -178,6 +206,7 @@ char    *get_the_line(char *line, int x)
     while (line[x] != '\n' && line[x] != '\0')
         str[y++] = line[x++];
     str[y] = '\0';
+    data->file.item++;
     return (cut_spaces(str));
 }
 
@@ -214,7 +243,7 @@ int	ft_is_digit(int c)
 	return (0);
 }
 
-int get_colors(char *line, int x, t_color *color)
+int get_colors(char *line, int x, t_color *color, t_data *data)
 {
     while (line[x] == ' ')
         x++;
@@ -237,6 +266,7 @@ int get_colors(char *line, int x, t_color *color)
         x++;
     if (line[x] != '\n' && line[x] != '\0')
         return (-1);
+    data->file.item++;
     return (0);
 }
 
@@ -273,29 +303,31 @@ int it_s_ok_to_be_line(t_data *data, char *line)
     //    printf("RET = %d\n", ret);
         if (ret == -1)
         {
-            printf("ret -1\n");
+           // printf("ret -1\n");
             return (pars_error(ret, data));//problem in file
         }
         else if (ret == -11 && data->file.textures.north == NULL)
         {
-          //  printf("NO entre ici \n");
-            data->file.textures.north = get_the_line(line, 0);
+         //   printf("NO entre ici \n");
+            data->file.textures.north = get_the_line(line, 0, data);
         }
         else if (ret == -12 && data->file.textures.south == NULL)
-            data->file.textures.south = get_the_line(line, 0);
+            data->file.textures.south = get_the_line(line, 0, data);
         else if (ret == -13 && data->file.textures.west == NULL)
-            data->file.textures.west = get_the_line(line, 0);
+            data->file.textures.west = get_the_line(line, 0, data);
         else if (ret == -14 && data->file.textures.east == NULL)
-            data->file.textures.east = get_the_line(line, 0);
+            data->file.textures.east = get_the_line(line, 0, data);
         else if (ret == -15 && data->file.floor.r == -1)
-            data->file.ret_flo = get_colors(line, x + 2, &data->file.floor);
+            data->file.ret_flo = get_colors(line, x + 2, &data->file.floor, data);
         else if (ret == -16 && data->file.ceiling.r == -1)
-            data->file.ret_cei = get_colors(line, x + 2, &data->file.ceiling);
-        else
+            data->file.ret_cei = get_colors(line, x + 2, &data->file.ceiling, data);
+        else if (data->file.item == 6)
         {
-            printf("WROg\n");
-            return (pars_error(0, data));
+           // printf("CREATE MAP\n");
+            return (create_map(line, data));
         }
+        else
+            return (pars_error(ret, data));//problem in file
       //  x++;
    // }
     return (1);
@@ -307,7 +339,7 @@ void    print_file(t_data *data)
     printf("NO = -%s-\nSO = -%s-\nWE = -%s-\nEA = -%s-\n", data->file.textures.north, data->file.textures.south, data->file.textures.west, data->file.textures.east);
     printf("F = %d,%d,%d\n", data->file.floor.r, data->file.floor.g, data->file.floor.b);
     printf("C = %d,%d,%d\n", data->file.ceiling.r, data->file.ceiling.g, data->file.ceiling.b);
-    printf("   ______\n");
+    printf("____________________________________________________________________\n");
 }
 
 int shake_colors(t_color *color, t_data *data)
@@ -351,7 +383,7 @@ int   parsing_map(t_data *data, char *file)
     line = NULL;
     fd = open(file , O_RDONLY);
     ret = 1;
-    while (ret != 0)
+    while (ret != 0 && data->file.fin == 0)
     {
         ret = get_next_lineo(fd, &line);
         data->file.gnl++;
@@ -360,17 +392,22 @@ int   parsing_map(t_data *data, char *file)
             free(line);
             data->file.gnl++;
             ret = get_next_lineo(fd, &line);
+            data->file.n++;
         }
         if (ret < 0)
             return (pars_error(ret, data));
+        else if (ret == 0)
+            data->file.fin = 1;
         ret = it_s_ok_to_be_line(data, line);
       //  printf("RET rrr%d\n", ret);
         if (ret < 0)
+        {
+            free(line);
             return (pars_error(ret, data));
+        }
         free(line);
     }
     ret = map_error(data);
-    print_file(data);
     return (ret);
 }
 /*

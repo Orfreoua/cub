@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ojauregu <ojauregu@student.42.fr>          +#+  +:+       +#+         #
+#    By: orfreoua <ofreoua42student@gmail.com>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/02 14:57:57 by orfreoua          #+#    #+#              #
-#    Updated: 2023/02/21 04:02:22 by ojauregu         ###   ########.fr        #
+#    Updated: 2023/02/25 17:29:38 by orfreoua         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ SRCS			=	srcs/*.c\
 					srcs/minimap/*.c\
 					srcs/draw/*.c\
 					srcs/raycasting/*.c\
+					srcs/shiffting/*.c\
 					
 
 DIR_MLX			=	./mlx_linux/
@@ -26,7 +27,7 @@ OBJS			= $(SRCS:.c=.o)
 
 CC				= cc
 
-CFLAGS			= -Wall -Wextra -Werror -I ./headers
+CFLAGS			= -Wall -Wextra -Werror -g3 -I ./headers
 
 LIBS			= -L ./mlx_linux/ -lmlx -lXext -lX11 -lm
 
