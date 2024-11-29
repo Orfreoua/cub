@@ -3,6 +3,8 @@
 
 Cub3D is a simple 3D game engine developed in C using raycasting to render a basic 3D world, inspired by classic first-person shooters like 'Wolfenstein 3D' and 'Doom'.
 
+![](assets/screen/IMG_6441.jpg)
+
 ## Description
 
 Cub3D is a project that demonstrates the use of raycasting to render a 3D environment. It includes basic game mechanics such as player movement, camera rotation, and wall rendering. The goal is to create a playable 3D world with minimal resources, focusing on learning low-level graphics programming in C.
