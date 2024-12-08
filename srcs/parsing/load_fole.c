@@ -52,9 +52,7 @@ void	load_path(t_data *data, char *line, char **path, int fd)
 int	check_inside_fole(t_data *data, int fd)
 {
 	char	*line;
-	int		nb;
 
-	nb = 0;
 	if (fd == -1)
 		return (print_error(BAD_PATH_FILE));
 	while (get_next_line(fd, &line) > 0)
@@ -69,7 +67,6 @@ int	check_inside_fole(t_data *data, int fd)
 			load_path(data, line, &data->fole.textures.west, fd);
 		else
 			break ;
-		nb++;
 		if (all_data_is_recovered(data))
 			break ;
 	}
