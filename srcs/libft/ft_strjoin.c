@@ -9,8 +9,6 @@
 /*   Updated: 2023/02/06 17:54:55 by orfreoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 #include "../../headers/libft.h"
 
 char	*ft_strjoin(char const *s1, char const *s2, int index_free)
@@ -19,7 +17,7 @@ char	*ft_strjoin(char const *s1, char const *s2, int index_free)
 	int		size;
 	int		ct[2];
 
-	size = ft_strlen((char *)s1) + ft_strlen((char *)s2);
+	size = ft_strleen((char *)s1) + ft_strleen((char *)s2);
 	s3 = malloc(sizeof(char) * (size + 1));
 	if (!s3)
 		return (0);

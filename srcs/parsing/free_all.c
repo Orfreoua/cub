@@ -1,28 +1,76 @@
-#include "../../headers/cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_all.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ojauregu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/14 17:41:54 by ojauregu          #+#    #+#             */
+/*   Updated: 2023/03/31 18:41:27 by ojauregu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+#include "headers.h"
 
-void    free_strings(t_file *file)
+void	free_strings(t_fole *fole)
 {
-    if (file->textures.north != NULL)
-        free(file->textures.north);
-    if (file->textures.south != NULL)
-        free(file->textures.south);
-    if (file->textures.east != NULL)
-        free(file->textures.east);
-    if (file->textures.west != NULL)
-        free(file->textures.west);
-    return ;
+	if (fole->textures.north != NULL)
+		free(fole->textures.north);
+	if (fole->textures.south != NULL)
+		free(fole->textures.south);
+	if (fole->textures.east != NULL)
+		free(fole->textures.east);
+	if (fole->textures.west != NULL)
+		free(fole->textures.west);
+	fole->textures.north = NULL;
+	fole->textures.south = NULL;
+	fole->textures.east = NULL;
+	fole->textures.west = NULL;
+	return ;
 }
 
-void    free_all(t_data *data)
+void	free_all(t_data *data)
 {
-    free_strings(&data->file);
-    free_tab(data->file.map, data->file.y);
-    return ;
+	data->fole.free = 11;
+	free_strings(&data->fole);
+	if (data->fole.map != NULL)
+		free_tab(data->fole.map, data->fole.y);
+	data->fole.map = NULL;
+	if (data->fole.tab != NULL)
+		free_tab(data->fole.tab, data->fole.y);
+	data->fole.tab = NULL;
+	if (data->fole.taby != NULL)
+		free_tab(data->fole.taby, data->fole.y);
+	data->fole.taby = NULL;
+	if (data->fole.mapy != NULL)
+		free_mapy(data);
+	data->fole.mapy = NULL;
+	return ;
 }
 
-void    free_alll(t_file *file)
+void	free_all_nxt(t_data *data)
 {
-    free_strings(file);
-    free_tab(file->map, file->y);
-    return ;
+	free_strings(&data->fole);
+	if (data->fole.mapy != NULL)
+		free_mapy(data);
+	data->fole.mapy = NULL;
+}
+
+void	free_alll(t_fole *fole)
+{
+	free_strings(fole);
+	free_tab(fole->map, fole->y);
+	free_tab(fole->tab, fole->y);
+	return ;
+}
+
+void	free_tabs(t_data *data)
+{
+	if (data->fole.map != NULL)
+		free_tab(data->fole.map, data->fole.y);
+	data->fole.map = NULL;
+	if (data->fole.tab != NULL)
+		free_tab(data->fole.tab, data->fole.y);
+	data->fole.tab = NULL;
+	if (data->fole.taby != NULL)
+		free_tab(data->fole.taby, data->fole.y);
 }

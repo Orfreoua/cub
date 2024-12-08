@@ -1,140 +1,87 @@
-#include "../../headers/cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   create_tab.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ojauregu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/14 17:49:17 by ojauregu          #+#    #+#             */
+/*   Updated: 2023/03/14 17:49:19 by ojauregu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+#include "headers.h"
 
-int **cpy_tab(t_file *file, int **tmp)
+int	**cpy_tab(t_fole *fole, int **tmp)
 {
-    int y;
-    int x;
+	int	y;
+	int	x;
 
-    y = 0;
-    if (file->map == NULL)
-        return (tmp);
-   // printf("suite\n");
-    //printf("tmp[%d][0] = %d\n", y, file->map[y][0]);
-    while (file->map[y][0] != -1)
-    {
-        x = 0;
-        while (file->map[y][x] != -1)
-            x++;
-      //  printf("tmp[%d][%d] =\n", y, x);
-        //printf("tmp[%d][%d] = %d\n", y, x, file->map[y][x]);
-        //printf("x=  %d, y  = %d, tab[y][x] = %d\n", x, y, file->map[y][x]);
-        free(tmp[y]);
-        tmp[y] = (int *)malloc(sizeof(int) * (x + 1));
-        if (!tmp[file->y])
-            return (NULL);
-        x = -1;
-        while (file->map[y][++x] != -1)
-        {
-           // printf("go\n");
-            tmp[y][x] = file->map[y][x];
-          //  printf("auoi\n");
-          //  printf("tmp[%d][%d] = %d\n", y, x, tmp[y][x]);
-        //    x++;
-        }
-        tmp[y][x] = file->map[y][x];
-        y++;
-        //printf("passe\n");
-    }
-   // tmp[y][0] = -1;
- //   free_tab_bis(file->map, file->y);
- //   file->map = NULL;
-    return (tmp);
-}
-/*
-espace == 2
-mur == 1
-vide == 0
-perso == 3
-*/
-int convert(char c)
-{
-    if (c == '1' || c == '0')
-        return (c - 48);
-    else if (c == ' ')
-        return (2);
-    else if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
-    {
-     //   printf("===============================\n");
-        return (3);
-    }
-    return (-2);
+	y = 0;
+	if (fole->map == NULL)
+		return (tmp);
+	while (fole->map[y][0] != -1)
+	{
+		x = 0;
+		while (fole->map[y][x] != -1)
+			x++;
+		free(tmp[y]);
+		tmp[y] = (int *)malloc(sizeof(int) * (x + 1));
+		if (!tmp[fole->y])
+			return (err_in_add(fole, y, MALLOC_FAILED));
+		x = -1;
+		while (fole->map[y][++x] != -1)
+			tmp[y][x] = fole->map[y][x];
+		tmp[y][x] = fole->map[y][x];
+		y++;
+	}
+	return (tmp);
 }
 
-double  player_pos(char c, t_file *file)
+int	**add_next_line(t_fole *fole, int **tmp, char *str)
 {
-    file->pos = 1;
-    if (c == 'N')
-        return ((2 * M_PI) / 4);
-    else if (c == 'S')
-        return ((3 * M_PI) / 4);
-    else if (c == 'E')
-        return (0);
-    return ((4 * M_PI) / 4);
+	int	**tab;
+	int	x;
+
+	tab = cpy_tab(fole, tmp);
+	free_tab_bis(fole->map, fole->y);
+	free(tab[fole->y - 1]);
+	tab[fole->y - 1] = (int *)malloc(sizeof(int) * (ft_strleen(str) + 1));
+	if (!tab[fole->y - 1])
+		return (err_in_add(fole, fole->y - 1, MALLOC_FAILED));
+	x = 0;
+	while (str[x] != '\0' && str_c(fole->src, str[x]) != -1)
+	{
+		tab[fole->y - 1][x] = convert(str[x]);
+		if (tab[fole->y - 1][x] == 3 && fole->pos < 2)
+		{
+			fole->rotate = player_pos(str[x], fole, x, fole->y - 1);
+			tab[fole->y - 1][x] = 0;
+		}
+		else if (tab[fole->y - 1][x] == -2 ||
+		(tab[fole->y - 1][x] == 3 && fole->pos < 2))
+			return (err_in_add(fole, fole->y - 1, WRONG_CHAR_IN_MAP));
+		x++;
+	}
+	tab[fole->y - 1][x] = -1;
+	return (tab);
 }
 
-int **add_next_line(t_file *file, int **tmp, char *str)
+void	create_tab(t_fole *fole, char *str)
 {
-    int **tab;
-    int x;
-    
-    tab = cpy_tab(file, tmp);
-   // printf("str = -%s-\n", str);
-    //free_tab(file->map, file->y);
-    free_tab_bis(file->map, file->y);
-    free(tab[file->y - 1]);
-    tab[file->y - 1] = (int *)malloc(sizeof(int) * (ft_strlen(str) + 1));
-    if (!tab[file->y - 1])
-        return (NULL);
-    x = 0;
-    while (str[x] != '\0' && str_c(file->src, str[x]) != -1)
-    {
-      //  printf("ok? %d, %f\n", x, file->rotate);
-        tab[file->y - 1][x] = convert(str[x]);
-     //   printf("tab-1 de x = %d, -%s-, %c\n", tab[file->y - 1][x], str, str[x]);
-        if (tab[file->y - 1][x] == 3 && file->pos < 2)
-        {
-      //      printf("personnage devrait etre 3 = %d\n", tab[file->y - 1][x]);
-            file->rotate = player_pos(str[x], file);////////////////////a verifier
-        }
-        else if (tab[file->y - 1][x] == -2 || (tab[file->y - 1][x] == 3 && file->pos < 2))
-        {
-           // printf("dedans\n");
-          //  free_alll(file);
-            return(NULL);///////error
-        }
-        x++;
-    }
-    tab[file->y - 1][x] = -1;
- //   printf("file tab ==== %d\n", file->map);
-    return (tab);
-}
+	int	**tmp;
+	int	y;
 
-
-void    create_tab(t_file *file, char *str)
-{
-    int **tmp;
-    int y;
-
-  //  printf("debut file->y = %d\n", file->y);
-    tmp = (int **)malloc(sizeof(int *) * (file->y + 2));
-    if (!tmp)
-    {
-        file->parsing_map_msg = MALLOC_FAILED;
-        return ;
-    }
-    y = 0;
-    while (y <= file->y)
-    {
-        tmp[y] = (int *)malloc(sizeof(int) * (1));
-        if (!tmp[y] && file->parsing_map_msg == NULL)
-        {
-            file->parsing_map_msg = MALLOC_FAILED;
-            return ;
-        }
-      //  printf("y = %d\n", file->y);
-        tmp[y][0] = -1;
-        y++;
-    }
-    file->map = add_next_line(file, tmp, str);
-   // free_tab_bis(tmp, file->y);
+	tmp = (int **)malloc(sizeof(int *) * (fole->y + 2));
+	if (!tmp)
+		return (put_err_msg(fole, MALLOC_FAILED));
+	y = 0;
+	while (y <= fole->y)
+	{
+		tmp[y] = (int *)malloc(sizeof(int) * (1));
+		if (!tmp[y] && fole->parsing_map_msg == NULL)
+			return (err_in_bis(fole, y, MALLOC_FAILED));
+		tmp[y][0] = -1;
+		y++;
+	}
+	fole->map = add_next_line(fole, tmp, str);
 }

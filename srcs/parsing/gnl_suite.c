@@ -1,4 +1,15 @@
-#include "../../headers/cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   gnl_suite.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ojauregu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/14 17:39:40 by ojauregu          #+#    #+#             */
+/*   Updated: 2023/03/14 17:39:43 by ojauregu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+#include "headers.h"
 
 char	*lolilol(char **str, char *strr, int x, int y)
 {
@@ -10,7 +21,7 @@ char	*lolilol(char **str, char *strr, int x, int y)
 		return (NULL);
 	temp = (char *)malloc(sizeof(char) * (y + 1));
 	if (!temp)
-		return (NULL);
+		return (free_str(line));
 	x = 0;
 	y = 0;
 	while (strr[y] != '\n' && strr[y] != '\0')

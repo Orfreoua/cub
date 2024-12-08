@@ -1,4 +1,15 @@
-#include "../../headers/cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   gnl.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ojauregu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/14 17:38:46 by ojauregu          #+#    #+#             */
+/*   Updated: 2023/03/14 17:39:20 by ojauregu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+#include "headers.h"
 
 int	ft_check(char *str)
 {
@@ -48,7 +59,7 @@ int	ft_read(char **str, int fd)
 
 	n = 1;
 	rid = 1;
-    if (fd < 0)
+	if (fd < 0)
 		return (fd);
 	while (n > 0 && rid > 0)
 	{
@@ -65,9 +76,8 @@ int	ft_read(char **str, int fd)
 	return (rid);
 }
 
-int	get_next_lineo(int fd, char **line)
+int	get_next_lineo(int fd, char **line, char **str)
 {
-	static char	*str[512];
 	int			rid;
 
 	if (!str[fd])
@@ -84,10 +94,6 @@ int	get_next_lineo(int fd, char **line)
 	if (*line == NULL || str[fd] == NULL)
 		return (free_for_rtn(str[fd], -1));
 	if (str[fd][0] == '\0' && rid == 0)
-	{
-		free(str[fd]);
-		str[fd] = NULL;
 		return (0);
-	}
 	return (1);
 }

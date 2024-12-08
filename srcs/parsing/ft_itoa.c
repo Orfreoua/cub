@@ -1,5 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ojauregu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/14 17:40:01 by ojauregu          #+#    #+#             */
+/*   Updated: 2023/03/14 17:41:35 by ojauregu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "headers.h"
-//#include "cub3d.h"
 
 int	ft_strlenn(char *str)
 {
@@ -11,10 +21,10 @@ int	ft_strlenn(char *str)
 	return (len);
 }
 
-static void		ft_rev_str(char *str, int size)
+static void	ft_rev_str(char *str, int size)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	if (str[0] == '-')
@@ -40,10 +50,10 @@ static void		ft_rev_str(char *str, int size)
 	}
 }
 
-static int		ft_diz(long nb)
+static int	ft_diz(long nb)
 {
-	int n;
-	int res;
+	int	n;
+	int	res;
 
 	n = 1;
 	res = 0;
@@ -72,7 +82,8 @@ char	*ft_itoa(int n)
 
 	nb = n;
 	i = 0;
-	if (!(str = (char *)malloc(sizeof(char) * (ft_diz(nb) + 1))))
+	str = (char *)malloc(sizeof(char) * (ft_diz(nb) + 1));
+	if (!str)
 		return (0);
 	ft_bzero(str, ft_diz(nb) + 1);
 	if (nb < 0)
@@ -87,7 +98,7 @@ char	*ft_itoa(int n)
 	}
 	str[i++] = (nb % 10 + '0');
 	str[i++] = '\0';
-	ft_rev_str(str, ft_strlen(str));
+	ft_rev_str(str, ft_strleen(str));
 	return (str);
 }
 

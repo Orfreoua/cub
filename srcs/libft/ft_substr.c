@@ -19,9 +19,9 @@ char	*ft_substr(char *s, int x, int y)
 	int		i;
 
 	size = y - x;
-	if (size < 0 || (ft_strlen(s) < y))
+	if (size < 0 || (ft_strleen(s) < y))
 		return (0);
-	new_s = malloc(sizeof(char *) * (size + 1));
+	new_s = (char *)malloc(sizeof(char) * (size + 1));
 	if (!new_s)
 		return (0);
 	i = 0;
