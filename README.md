@@ -32,13 +32,13 @@ To install and run Cub3D, follow these steps:
 2. Compile the project:
 
    ```bash
-   make
+   make bonus
    ```
 
 3. Run the game:
 
    ```bash
-   ./cub3d map.cub
+   ./cub3D_bonus assets/maps/mapokemon.cub
    ```
 
    Replace 'map.cub' with the path to your map file.
